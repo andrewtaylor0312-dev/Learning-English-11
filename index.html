@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Web Học Từ Vựng Tiếng Anh THPT</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: #64748b;
+        }
+        .btn-secondary:hover {
+            background-color: #475569;
+        }
+
+        .unit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+        }
+
+        .unit-card {
+            background: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .unit-card:hover {
+            border-color: var(--primary);
+            background: #eef2ff;
+            transform: translateY(-2px);
+        }
+
+        .unit-card h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .unit-card p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .game-menu {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .game-menu {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .game-option-card {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .game-option-card:hover {
+            border-color: var(--primary);
+            background: #f0fdf4;
+        }
+
+        .game-option-card h3 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .matching-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 700px) {
+            .matching-board {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .match-card {
+            background: #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 10px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            user-select: none;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .match-card:hover {
+            background: #cbd5e1;
+        }
+
+        .match-card.selected {
+            background: #c7d2fe;
+            border: 2px solid var(--primary);
+            color: var(--primary-hover);
+        }
+
+        .match-card.matched {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid var(--success);
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .match-card.wrong {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid var(--danger);
+        }
+
+        .write-game-container {
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .word-prompt {
+            font-size: 2rem;
+            letter-spacing: 2px;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 15px 0;
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .word-meaning {
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            padding: 10px 16px;
+            font-size: 1.1rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            width: 250px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .feedback-msg {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            min-height: 30px;
+        }
+
+        .score-board {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>English Vocabulary Practice - THPT</h1>
+        <p>Hệ thống học và ôn tập từ vựng Unit 1 đến Unit 10 tương tác cao</p>
+    </header>
+
+    <div class="container" id="app-container"></div>
+
+    <script>
+        const vocabData = {
+            1: [
+                { word: "antibiotic", meaning: "thuốc kháng sinh" },
+                { word: "bacteria", meaning: "vi khuẩn" },
+                { word: "balanced", meaning: "cân đối, cân bằng" },
+                { word: "cut down on", meaning: "cắt giảm" },
+                { word: "diameter", meaning: "đường kính" },
+                { word: "disease", meaning: "bệnh" },
+                { word: "energy", meaning: "năng lượng" },
+                { word: "examine", meaning: "kiểm tra, khám (sức khoẻ)" },
+                { word: "fitness", meaning: "sự khoẻ khoắn" },
+                { word: "food poisoning", meaning: "ngộ độc thức ăn" },
+                { word: "germ", meaning: "vi trùng" },
+                { word: "give up", meaning: "từ bỏ" },
+                { word: "illness", meaning: "sự ốm đau" },
+                { word: "infection", meaning: "sự lây nhiễm" },
+                { word: "ingredient", meaning: "thành phần, nguyên liệu" },
+                { word: "life expectancy", meaning: "tuổi thọ" },
+                { word: "muscle", meaning: "cơ bắp" },
+                { word: "nutrient", meaning: "chất dinh dưỡng" },
+                { word: "organism", meaning: "sinh vật, thực thể sống" },
+                { word: "press-up", meaning: "động tác chống đẩy" },
+                { word: "properly", meaning: "một cách điều độ, hợp lí" },
+                { word: "recipe", meaning: "công thức nấu ăn" },
+                { word: "regular", meaning: "đều đặn, thường xuyên" },
+                { word: "spread", meaning: "sự lây lan" },
+                { word: "star jump", meaning: "động tác nhảy dang tay chân" },
+                { word: "strength", meaning: "sức mạnh" },
+                { word: "suffer", meaning: "chịu đựng" },
+                { word: "treatment", meaning: "cách điều trị" },
+                { word: "tuberculosis", meaning: "bệnh lao phổi" },
+                { word: "virus", meaning: "vi-rút" },
+                { word: "work out", meaning: "tập thể dục" }
+            ],
+            2: [
+                { word: "adapt", meaning: "thích nghi, thay đổi cho phù hợp" },
+                { word: "argument", meaning: "tranh luận, tranh cãi" },
+                { word: "characteristic", meaning: "đặc tính, đặc điểm" },
+                { word: "conflict", meaning: "sự xung đột, va chạm" },
+                { word: "curious", meaning: "tò mò, muốn tìm hiểu" },
+                { word: "digital native", meaning: "người sinh ra ở thời đại công nghệ & Internet" },
+                { word: "experience", meaning: "trải nghiệm" },
+                { word: "extended family", meaning: "gia đình đa thế hệ, đại gia đình" },
+                { word: "freedom", meaning: "sự tự do" },
+                { word: "generation gap", meaning: "khoảng cách giữa các thế hệ" },
+                { word: "hire", meaning: "thuê nhân công, thuê người làm" },
+                { word: "honesty", meaning: "tính trung thực, chân thật" },
+                { word: "individualism", meaning: "chủ nghĩa cá nhân" },
+                { word: "influence", meaning: "gây ảnh hưởng" },
+                { word: "limit", meaning: "giới hạn, hạn chế" },
+                { word: "nuclear family", meaning: "gia đình hạt nhân" },
+                { word: "screen time", meaning: "thời gian sử dụng thiết bị điện tử" },
+                { word: "social media", meaning: "mạng xã hội" },
+                { word: "value", meaning: "giá trị, coi trọng" },
+                { word: "view", meaning: "quan điểm" }
+            ],
+            3: [
+                { word: "article", meaning: "bài báo" },
+                { word: "card reader", meaning: "thiết bị đọc thẻ" },
+                { word: "city dweller", meaning: "người dân thành phố" },
+                { word: "cycle path", meaning: "làn đường dành cho xe đạp" },
+                { word: "electric bus", meaning: "xe buýt điện" },
+                { word: "exhibition", meaning: "cuộc triển lãm" },
+                { word: "impact", meaning: "tác động, ảnh hưởng" },
+                { word: "model", meaning: "mô hình" },
+                { word: "negative", meaning: "tiêu cực" },
+                { word: "public transport", meaning: "phương tiện giao thông công cộng" },
+                { word: "tram", meaning: "xe điện, tàu điện" },
+                { word: "traffic jam", meaning: "sự tắc nghẽn giao thông" }
+            ],
+            4: [
+                { word: "apply", meaning: "xin việc, ứng cử" },
+                { word: "celebration", meaning: "lễ kỉ niệm, lễ tổ chức" },
+                { word: "community", meaning: "cộng đồng" },
+                { word: "compliment", meaning: "lời khen" },
+                { word: "contribution", meaning: "sự đóng góp, cống hiến" },
+                { word: "cultural exchange", meaning: "sự trao đổi văn hoá" },
+                { word: "current", meaning: "hiện tại, đương đại" },
+                { word: "development", meaning: "sự phát triển" },
+                { word: "efficiently", meaning: "có hiệu quả" },
+                { word: "eye-opening", meaning: "mở mang tầm mắt" },
+                { word: "high-rise", meaning: "cao tầng, có nhiều tầng" },
+                { word: "honour", meaning: "thể hiện sự kính trọng" },
+                { word: "infrastructure", meaning: "cơ sở hạ tầng" },
+                { word: "interact", meaning: "tương tác" },
+                { word: "issue", meaning: "vấn đề" },
+                { word: "leadership skills", meaning: "kĩ năng lãnh đạo" },
+                { word: "liveable", meaning: "đáng sống" },
+                { word: "live-stream", meaning: "phát sóng trực tuyến" },
+                { word: "neighbourhood", meaning: "khu dân cư" },
+                { word: "politics", meaning: "chính trị" },
+                { word: "promote", meaning: "thúc đẩy, quảng bá" },
+                { word: "proposal", meaning: "lời / bản đề xuất" },
+                { word: "propose", meaning: "đề xuất" },
+                { word: "qualify", meaning: "đủ tiêu chuẩn, đủ khả năng" },
+                { word: "sustainable", meaning: "bền vững" }
+            ],
+            5: [
+                { word: "atmosphere", meaning: "khí quyển" },
+                { word: "balance", meaning: "sự cân bằng" },
+                { word: "carbon dioxide", meaning: "khí cacbonic (CO₂)" },
+                { word: "coal", meaning: "than đá" },
+                { word: "consequence", meaning: "hậu quả, kết quả" },
+                { word: "deforestation", meaning: "sự phá rừng" },
+                { word: "emission", meaning: "sự phát thải" },
+                { word: "fossil fuel", meaning: "nhiên liệu hoá thạch" },
+                { word: "global warming", meaning: "sự nóng lên toàn cầu" },
+                { word: "heat-tracking", meaning: "giữ nhiệt" },
+                { word: "methane", meaning: "khí mêtân (CH₄)" },
+                { word: "renewable", meaning: "tái tạo" }
+            ],
+            6: [
+                { word: "ancient", meaning: "cổ kính" },
+                { word: "appreciate", meaning: "hiểu rõ giá trị, đánh giá cao" },
+                { word: "citadel", meaning: "thành trì" },
+                { word: "complex", meaning: "quần thể, tổ hợp" },
+                { word: "crowdfunding", meaning: "việc quyên góp, huy động vốn từ cộng đồng" },
+                { word: "festive", meaning: "thuộc về ngày lễ, có không khí lễ hội" },
+                { word: "fine", meaning: "tiền phạt" },
+                { word: "folk", meaning: "thuộc về dân gian" },
+                { word: "heritage", meaning: "di sản" },
+                { word: "historic", meaning: "quan trọng, có giá trị lịch sử" },
+                { word: "historical", meaning: "thuộc về lịch sử, mang tính lịch sử" },
+                { word: "imperial", meaning: "thuộc về hoàng tộc" },
+                { word: "landscape", meaning: "phong cảnh" },
+                { word: "limestone", meaning: "đá vôi" },
+                { word: "monument", meaning: "lăng mộ, đài kỷ niệm, công trình kiến trúc" },
+                { word: "performing arts", meaning: "nghệ thuật biểu diễn" },
+                { word: "preserve", meaning: "bảo tồn" },
+                { word: "restore", meaning: "khôi phục, sửa lại" },
+                { word: "state", meaning: "hiện trạng, tình trạng" },
+                { word: "temple", meaning: "đền, miếu" },
+                { word: "trending", meaning: "theo xu hướng" },
+                { word: "valley", meaning: "thung lũng" }
+            ],
+            7: [
+                { word: "academic", meaning: "có tính chất học thuật, liên quan tới học tập" },
+                { word: "apprenticeship", meaning: "thời gian học nghề, học việc thực tế" },
+                { word: "bachelor's degree", meaning: "bằng cử nhân" },
+                { word: "brochure", meaning: "ấn phẩm quảng cáo, giới thiệu" },
+                { word: "doctorate", meaning: "bằng tiến sĩ" },
+                { word: "entrance exam", meaning: "kì thi đầu vào" },
+                { word: "formal", meaning: "chính quy, có hệ thống" },
+                { word: "graduation", meaning: "khi tốt nghiệp, lễ tốt nghiệp" },
+                { word: "higher education", meaning: "giáo dục đại học" },
+                { word: "institution", meaning: "cơ sở, viện (đào tạo)" },
+                { word: "manage", meaning: "cố gắng (làm được việc gì đó)" },
+                { word: "master's degree", meaning: "bằng thạc sĩ" },
+                { word: "mechanic", meaning: "thợ cơ khí" },
+                { word: "professional", meaning: "chuyên nghiệp, nhà nghề" },
+                { word: "qualification", meaning: "trình độ chuyên môn, văn bằng" },
+                { word: "school-leaver", meaning: "học sinh tốt nghiệp trung học phổ thông" },
+                { word: "sixth-form college", meaning: "trường dành cho học sinh 16-19 tuổi, chuẩn bị vào đại học" },
+                { word: "vocational school", meaning: "trường dạy nghề" }
+            ],
+            8: [
+                { word: "achieve", meaning: "đạt được, giành được" },
+                { word: "carry out", meaning: "tiến hành" },
+                { word: "combine", meaning: "kết hợp" },
+                { word: "come up with", meaning: "nghĩ ra, nảy ra" },
+                { word: "confidence", meaning: "sự tự tin" },
+                { word: "confident", meaning: "tự tin" },
+                { word: "deal with", meaning: "giải quyết, đối phó" },
+                { word: "decision-making skills", meaning: "kĩ năng đưa ra quyết định" },
+                { word: "get around", meaning: "đi lại" },
+                { word: "get into the habit of", meaning: "tạo thói quen" },
+                { word: "independence", meaning: "sự độc lập" },
+                { word: "independent", meaning: "độc lập, không lệ thuộc" },
+                { word: "learner", meaning: "người học" },
+                { word: "learning goal", meaning: "mục tiêu học tập" },
+                { word: "life skill", meaning: "kĩ năng sống" },
+                { word: "make use of", meaning: "tận dụng" },
+                { word: "manage", meaning: "quản lí" },
+                { word: "measure", meaning: "đo" },
+                { word: "money-management skills", meaning: "kĩ năng quản lí tiền" },
+                { word: "remove", meaning: "lấy ra, loại bỏ" },
+                { word: "responsibility", meaning: "sự chịu trách nhiệm, trách nhiệm" },
+                { word: "responsible", meaning: "có trách nhiệm" },
+                { word: "rice cooker", meaning: "nồi cơm điện" },
+                { word: "self-motivated", meaning: "có động lực, năng nổ" },
+                { word: "self-study", meaning: "sự tự học" },
+                { word: "time-management skills", meaning: "kĩ năng quản lí thời gian" }
+            ],
+            9: [
+                { word: "admit", meaning: "thú nhận" },
+                { word: "alcohol", meaning: "đồ uống có cồn (rượu, bia...)" },
+                { word: "anxiety", meaning: "sự lo lắng" },
+                { word: "ashamed", meaning: "xấu hổ" },
+                { word: "awareness", meaning: "nhận thức" },
+                { word: "body shaming", meaning: "sự chế nhạo ngoại hình người khác" },
+                { word: "bully", meaning: "bắt nạt" },
+                { word: "campaign", meaning: "chiến dịch" },
+                { word: "crime", meaning: "tội phạm" },
+                { word: "cyberbullying", meaning: "bắt nạt trên mạng" },
+                { word: "depression", meaning: "sự trầm cảm" },
+                { word: "hang out", meaning: "đi chơi" },
+                { word: "lie", meaning: "lời nói dối" },
+                { word: "make fun of", meaning: "trêu chọc, chế giễu" },
+                { word: "obey", meaning: "tuân thủ" },
+                { word: "offensive", meaning: "gây xúc phạm" },
+                { word: "overpopulation", meaning: "sự quá tải dân số" },
+                { word: "peer pressure", meaning: "áp lực từ bạn bè" },
+                { word: "physical", meaning: "về mặt thể chất" },
+                { word: "poverty", meaning: "sự nghèo đói" },
+                { word: "self-confidence", meaning: "sự tự tin vào bản thân" },
+                { word: "skip", meaning: "trốn, bỏ" },
+                { word: "stand up to", meaning: "đứng lên chống lại" },
+                { word: "struggle", meaning: "đấu tranh" },
+                { word: "the odd one out", meaning: "kẻ / người khác biệt" },
+                { word: "the poverty line", meaning: "mức nghèo đói" },
+                { word: "verbal", meaning: "bằng lời" },
+                { word: "victim", meaning: "nạn nhân" },
+                { word: "violent", meaning: "sử dụng vũ lực, bạo lực" }
+            ],
+            10: [
+                { word: "biodiversity", meaning: "đa dạng sinh học" },
+                { word: "conservation", meaning: "sự bảo tồn thiên nhiên" },
+                { word: "coral reef", meaning: "rặng san hô" },
+                { word: "delta", meaning: "đồng bằng" },
+                { word: "destroy", meaning: "phá huỷ" },
+                { word: "ecosystem", meaning: "hệ sinh thái" },
+                { word: "endangered", meaning: "bị nguy hiểm" },
+                { word: "fauna", meaning: "động vật" },
+                { word: "flora", meaning: "thực vật" },
+                { word: "food chain", meaning: "chuỗi thức ăn" }
+            ]
+        };
+
+        const container = document.getElementById('app-container');
+        let currentUnit = null;
+
+        function renderHome() {
+            currentUnit = null;
+            let html = `
+                <div class="nav-bar">
+                    <h2>Danh sách các Unit (1 - 10)</h2>
+                    <p>Chọn một Unit để bắt đầu luyện tập</p>
+                </div>
+                <div class="unit-grid">
+            `;
+            for (let i = 1; i <= 10; i++) {
+                let count = vocabData[i] ? vocabData[i].length : 0;
+                html += `
+                    <div class="unit-card" onclick="selectUnit(${i})">
+                        <h3>Unit ${i}</h3>
+                        <p>${count} từ vựng</p>
+                    </div>
+                `;
+            }
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function selectUnit(unitNum) {
+            currentUnit = unitNum;
+            container.innerHTML = `
+                <div class="nav-bar">
+                    <button class="btn btn-secondary" onclick="renderHome()">← Quay lại chọn Unit</button>
+                    <h2>Unit ${currentUnit}</h2>
+                </div>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 20px;">Lựa chọn hình thức luyện tập:</p>
+                <div class="game-menu">
+                    <div class="game-option-card" onclick="startMatchingGame()">
+                        <h3>Trò chơi 1</h3>
+                        <p><strong>Matching Meaning</strong><br>Nối từ vựng tiếng Anh với nghĩa tiếng Việt tương ứng.</p>
+                    </div>
+                    <div class="game-option-card" onclick="startWriteGame()">
+                        <h3>Trò chơi 2</h3>
+                        <p><strong>Write the Correct Word</strong><br>Điền từ khuyết dựa trên gợi ý chữ cái đầu và nghĩa.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        let matchState = { cards: [], selectedCard: null, matchedCount: 0, score: 0 };
+
+        function startMatchingGame() {
+            let data = vocabData[currentUnit];
+            if (!data || data.length < 4) {
+                alert("Unit này chưa đủ từ vựng để chơi trò chơi này!");
+                return;
+            }
+
+            let shuffledData = [...data].sort(() => 0.5 - Math.random()).slice(0, 8);
+            let cardList = [];
+            shuffledData.forEach((item, index) => {
+                cardList.push({ id: index, type: 'word', text: item.word });
+                cardList.push({ id: index, type: 'meaning', text: item.meaning });
+            });
+
+            matchState.cards = cardList.sort(() => 0.5 - Math.random());
+            matchState.selectedCard = null;
+            matchState.matchedCount = 0;
+            matchState.score = 0;
+
+            renderMatchingBoard();
+        }
+
+        function renderMatchingBoard() {
+            let html = `
+                <div class="nav-bar">
+                    <button class="btn btn-secondary" onclick="selectUnit(${currentUnit})">← Menu Unit</button>
+                    <div class="score-board">Điểm: <span id="match-score">${matchState.score}</span> / 8</div>
+                    <button class="btn" onclick="startMatchingGame()">Chơi lại</button>
+                </div>
+                <div class="matching-board">
+            `;
+
+            matchState.cards.forEach((card, index) => {
+                html += `<div class="match-card" id="card-${index}" onclick="handleCardClick(${index})">${card.text}</div>`;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function handleCardClick(index) {
+            let clickedCardObj = matchState.cards[index];
+            let cardElement = document.getElementById(`card-${index}`);
+
+            if (cardElement.classList.contains('matched') || cardElement.classList.contains('selected')) return;
+
+            if (matchState.selectedCard === null) {
+                matchState.selectedCard = { index: index, data: clickedCardObj };
+                cardElement.classList.add('selected');
+            } else {
+                let firstIndex = matchState.selectedCard.index;
+                let firstCardObj = matchState.selectedCard.data;
+                let firstElement = document.getElementById(`card-${firstIndex}`);
+
+                if (firstIndex === index) {
+                    firstElement.classList.remove('selected');
+                    matchState.selectedCard = null;
+                    return;
+                }
+
+                if (firstCardObj.id === clickedCardObj.id && firstCardObj.type !== clickedCardObj.type) {
+                    firstElement.classList.remove('selected');
+                    firstElement.classList.add('matched');
+                    cardElement.classList.add('matched');
+
+                    matchState.score++;
+                    document.getElementById('match-score').innerText = matchState.score;
+                    matchState.selectedCard = null;
+
+                    if (matchState.score === 8) {
+                        setTimeout(() => {
+                            alert("🎉 Chúc mừng bạn đã hoàn thành xuất sắc trò chơi nối từ!");
+                        }, 300);
+                    }
+                } else {
+                    cardElement.classList.add('wrong');
+                    firstElement.classList.add('wrong');
+
+                    setTimeout(() => {
+                        firstElement.classList.remove('selected', 'wrong');
+                        cardElement.classList.remove('wrong');
+                    }, 500);
+
+                    matchState.selectedCard = null;
+                }
+            }
+        }
+
+        let writeState = { questions: [], currentIndex: 0, score: 0 };
+
+        function startWriteGame() {
+            let data = vocabData[currentUnit];
+            if (!data || data.length === 0) {
+                alert("Unit này chưa có dữ liệu từ vựng!");
+                return;
+            }
+
+            writeState.questions = [...data].sort(() => 0.5 - Math.random());
+            writeState.currentIndex = 0;
+            writeState.score = 0;
+
+            renderWriteQuestion();
+        }
+
+        function renderWriteQuestion() {
+            if (writeState.currentIndex >= writeState.questions.length) {
+                container.innerHTML = `
+                    <div class="nav-bar">
+                        <button class="btn btn-secondary" onclick="selectUnit(${currentUnit})">← Menu Unit</button>
+                    </div>
+                    <div class="write-game-container">
+                        <h2>🎉 Hoàn thành xuất sắc!</h2>
+                        <p style="margin: 20px 0; font-size: 1.2rem;">Tổng điểm của bạn: <strong>${writeState.score} / ${writeState.questions.length}</strong></p>
+                        <button class="btn" onclick="startWriteGame()">Chơi lại từ đầu</button>
+                    </div>
+                `;
+                return;
+            }
+
+            let currentQ = writeState.questions[writeState.currentIndex];
+            let maskedWord = currentQ.word.split('').map((char, idx) => {
+                if (char === ' ') return ' / ';
+                return idx === 0 || idx === currentQ.word.length - 1 ? char : '_';
+            }).join(' ');
+
+            container.innerHTML = `
+                <div class="nav-bar">
+                    <button class="btn btn-secondary" onclick="selectUnit(${currentUnit})">← Menu Unit</button>
+                    <div class="score-board">Câu: ${writeState.currentIndex + 1} / ${writeState.questions.length}</div>
+                </div>
+                <div class="write-game-container">
+                    <div class="word-meaning">Nghĩa: <strong>${currentQ.meaning}</strong></div>
+                    <div class="word-prompt">${maskedWord}</div>
+                    <div class="input-group">
+                        <input type="text" id="user-answer" placeholder="Nhập từ tiếng Anh..." autofocus autocomplete="off" onkeypress="handleKeyPress(event)">
+                        <button class="btn" onclick="checkAnswer()">Gửi</button>
+                    </div>
+                    <div class="feedback-msg" id="feedback"></div>
+                </div>
+            `;
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        }
+
+        function checkAnswer() {
+            let userInp = document.getElementById('user-answer').value.trim().toLowerCase();
+            let currentQ = writeState.questions[writeState.currentIndex];
+            let feedback = document.getElementById('feedback');
+
+            if (userInp === currentQ.word.toLowerCase()) {
+                feedback.style.color = 'var(--success)';
+                feedback.innerText = '✅ Chính xác!';
+                writeState.score++;
+                setTimeout(() => {
+                    writeState.currentIndex++;
+                    renderWriteQuestion();
+                }, 1000);
+            } else {
+                feedback.style.color = 'var(--danger)';
+                feedback.innerText = `❌ Sai rồi! Đáp án đúng là: ${currentQ.word}`;
+                setTimeout(() => {
+                    writeState.currentIndex++;
+                    renderWriteQuestion();
+                }, 1500);
+            }
+        }
+
+        renderHome();
+    </script>
+</body>
+</html>
